@@ -101,7 +101,7 @@ if st.button("Predict Price"):
     # prediction = model.predict(input_df)[0]
     # st.subheader(f"💰 Estimated Close Price: ${prediction:,.2f}")
 
-    if st.button("Predict Price"):
+    
     # Create DataFrame from input
     input_df = pd.DataFrame([input_data])
 
