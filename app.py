@@ -4,21 +4,26 @@ import pandas as pd
 import numpy as np
 import pickle
 from xgboost import XGBRegressor
+import joblib
 
 # --------------------------
 # Load saved artifacts
 # --------------------------
 @st.cache_resource
 def load_model():
-    with open('model.pkl', 'rb') as f:
-        model = pickle.load(f)
+    import zlib
+    import pickle
+
+    with open('model_compressed.pkl', 'rb') as f:
+        model_data = zlib.decompress(f.read())
+        model = pickle.loads(model_data)
     with open('scaler_v1_r2.pkl', 'rb') as f:
         scaler = pickle.load(f)
     with open('columns_v1_r2.pkl', 'rb') as f:
         columns = pickle.load(f)
     return model, scaler, columns
 
-model, scaler, feature_columns = load_model()
+model_compressed, scaler, feature_columns = load_model()
 
 # --------------------------
 # Streamlit App
