@@ -28,7 +28,7 @@ model_compressed, scaler, feature_columns = load_model()
 # --------------------------
 # Streamlit App
 # --------------------------
-st.title("🏠 Home Price Prediction App")
+st.title("🏠 California House Price Prediction")
 st.write("Enter property details below to estimate the close price.")
 
 # --------------------------
