@@ -95,8 +95,43 @@ input_data['HaveSchoolYN_False'] = 1 if school == "No" else 0
 # Predict button
 # --------------------------
 if st.button("Predict Price"):
+    # input_df = pd.DataFrame([input_data])
+    # numeric_cols = input_df.select_dtypes(include=['int64', 'float64']).columns
+    # input_df[numeric_cols] = scaler.transform(input_df[numeric_cols])
+    # prediction = model.predict(input_df)[0]
+    # st.subheader(f"💰 Estimated Close Price: ${prediction:,.2f}")
+
+    if st.button("Predict Price"):
+    # Create DataFrame from input
     input_df = pd.DataFrame([input_data])
-    numeric_cols = input_df.select_dtypes(include=['int64', 'float64']).columns
-    input_df[numeric_cols] = scaler.transform(input_df[numeric_cols])
-    prediction = model.predict(input_df)[0]
+
+    # --------------------------
+    # Scale numeric columns safely
+    # --------------------------
+    numeric_cols = scaler.feature_names_in_  # columns scaler was fitted on
+
+    # Ensure all expected numeric columns exist
+    for col in numeric_cols:
+        if col not in input_df.columns:
+            input_df[col] = 0  # fill missing numeric columns with 0
+
+    # Keep only the scaler columns in correct order
+    X_numeric = input_df[numeric_cols]
+    X_numeric_scaled = scaler.transform(X_numeric)
+    input_df[numeric_cols] = X_numeric_scaled
+
+    # --------------------------
+    # Ensure all feature columns exist
+    # --------------------------
+    for col in feature_columns:
+        if col not in input_df.columns:
+            input_df[col] = 0
+
+    # Keep columns in the order the model expects
+    input_df = input_df[feature_columns]
+
+    # --------------------------
+    # Make prediction
+    # --------------------------
+    prediction = model_compressed.predict(input_df)[0]
     st.subheader(f"💰 Estimated Close Price: ${prediction:,.2f}")
